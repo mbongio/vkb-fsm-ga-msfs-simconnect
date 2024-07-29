@@ -1,7 +1,8 @@
-# MSFS VKB FSM-GA Connector
+# MSFS VKB Dual THQ + SEM + FSM-GA Combo Connector
 
-This repo contains example code for syncing the LEDs of the
-VKB FMS-GA with MSFS via SimConnect.
+This repo contains example code for syncing the LEDs of 
+VKB's GNX Dual THQ + SEM + FMS-GA Combo with MSFS via SimConnect.
+This is a fork of the repo from LeeTrout that was focused on the FSM-GA only.
 
 ## Usage
 
