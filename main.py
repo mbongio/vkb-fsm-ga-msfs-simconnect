@@ -77,6 +77,16 @@ class FSMGADevice(devices.base.VKBDevice):
             led_mode=led.LEDMode.FAST_BLINK,
         )
 
+    def set_led_flashred(self, led_id):
+        """Sets to red flashing."""
+        self.set_led(
+            led_id,
+           "#F00",
+            color_mode=led.ColorMode.COLOR2,
+            led_mode=led.LEDMode.FAST_BLINK,
+            color2="#F00",
+        )
+
     def set_led_off(self, led_id):
         """Turns the LED 'off' by setting it to black so it is not illuminated."""
         self.set_led(
@@ -270,7 +280,7 @@ def _set_gear_led(led_id: int, sim_attr: str, fsmga: FSMGADevice, aircraft_state
         return
 
     if 0 < gear_position < 1 and known_state != "flash":
-        fsmga.set_led_flashing(led_id)
+        fsmga.set_led_flashred(led_id)
         KNOWN_LED_STATE[led_id] = "flash"
         return
 
@@ -287,10 +297,42 @@ def led_update_gr2(led_id: int, fsmga: FSMGADevice, aircraft_state):
 
 def led_update_gr3(led_id: int, fsmga: FSMGADevice, aircraft_state):
     _set_gear_led(led_id, "GEAR_RIGHT_POSITION", fsmga, aircraft_state)
+
+
+# SEM leds
+
+def led_update_sa1(led_id: int, fsmga: FSMGADevice, aircraft_state):
+    """ADD: Define behaviour for SA1 led."""
+    pass
  
+def led_update_sa2(led_id: int, fsmga: FSMGADevice, aircraft_state):
+    """ADD: Define behaviour for SA2 led."""
+    pass
+
+def led_update_sb1(led_id: int, fsmga: FSMGADevice, aircraft_state):
+    """ADD: Define behaviour for SB1 led."""
+    pass
+
+def led_update_sb2(led_id: int, fsmga: FSMGADevice, aircraft_state):
+    """ADD: Define behaviour for SB2 led."""
+    pass
+
+def led_update_sb3(led_id: int, fsmga: FSMGADevice, aircraft_state):
+    """ADD: Define behaviour for SB3 led."""
+    pass
+
+
 
 def led_update_loop(fsmga: FSMGADevice, aircraft_state: AircraftRequests):
     LED_UPDATER_MAP = {
+        FSMGALED.SA1: led_update_sa1,
+        FSMGALED.SA2: led_update_sa2,
+        FSMGALED.SB1: led_update_sb1,
+        FSMGALED.SB2: led_update_sb2,
+        FSMGALED.SB3: led_update_sb3,
+        FSMGALED.GR1: led_update_gr1,
+        FSMGALED.GR2: led_update_gr2,
+        FSMGALED.GR3: led_update_gr3,
         FSMGALED.HDG: led_update_hdg,
         FSMGALED.TRK: led_update_noop,  # Unused, TBD
         FSMGALED.NAV: led_update_nav,
@@ -303,9 +345,6 @@ def led_update_loop(fsmga: FSMGADevice, aircraft_state: AircraftRequests):
         FSMGALED.FD: led_update_fd,
         FSMGALED.YD: led_update_yd,
         FSMGALED.VS: led_update_vs,
-        FSMGALED.GR1: led_update_gr1,
-        FSMGALED.GR2: led_update_gr2,
-        FSMGALED.GR3: led_update_gr3,
     }
 
     for led_id, update_func in LED_UPDATER_MAP.items():
